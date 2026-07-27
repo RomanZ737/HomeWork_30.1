@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+from lms.models import Lesson, Course
 
 
 class CustomUserManager(BaseUserManager):
@@ -51,3 +52,27 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+class PaymentType(models.TextChoices):
+    CASH = 'Cash', 'Наличные'
+    TRANSFER = 'Transfer', 'Перевод'
+
+
+class Payments(models.Model):
+    user = models.ForeignKey(CustomUser,
+                             on_delete=models.CASCADE,
+                             verbose_name='User that payd for the course',
+                             help_text='Пользователь, котопый оплатил курс')
+    payment_at = models.DateTimeField(default=timezone.now, verbose_name='Date/Time of payment')
+    payed_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    payed_course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    payment_amount = models.PositiveIntegerField(default=0, verbose_name='Payment Amount')
+    payment_method = models.CharField(choices=PaymentType, default=PaymentType.TRANSFER)
+
+    def __str__(self):
+        return f'{self.user} {self.payed_lesson if self.payed_lesson else self.payed_course} {self.payment_amount}'
+
+    class Meta:
+        verbose_name = "Платёж"
+        verbose_name_plural = 'Платежи'
+        ordering = ['-payment_at']

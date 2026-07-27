@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, Payments
 
 
 @admin.register(CustomUser)
@@ -15,13 +15,10 @@ class CustomUserAdmin(UserAdmin):
                     )
     list_filter = ('is_active', 'is_staff', 'is_superuser')
 
-    # Поиск
     search_fields = ('email', 'phone_number', 'city')
 
-    # Сортировка
     ordering = ('email',)
 
-    # Группировка полей в форме редактирования
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Личная информация', {'fields': ('phone_number', 'city', 'avatar')}),
@@ -36,3 +33,10 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
+
+
+@admin.register(Payments)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'payment_at', 'payed_lesson', 'payed_course', 'payment_amount', 'payment_method')
+    list_filter = ('user', 'payment_at', 'payed_lesson', 'payed_course', 'payment_method')
+    search_fields = ('user', 'payed_lesson', 'payed_course')
