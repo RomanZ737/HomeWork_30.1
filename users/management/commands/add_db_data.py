@@ -1,8 +1,14 @@
+import random
+
 from django.core.management.base import BaseCommand
 from users.models import CustomUser, Payments
 from lms.models import Lesson, Course
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.models import Group
+
+
+
 
 
 class Command(BaseCommand):
@@ -31,6 +37,13 @@ class Command(BaseCommand):
             },
         ]
 
+        moderator = {
+                'email': 'moderator_user@example.com',
+                'password': 'Moderator12345@',
+                'city': 'Moscow',
+                'phone_number': '+79994444444'
+        }
+
         courses = [
             {'name': 'Python Basics', 'description': 'Основы программирования на Python'},
             {'name': 'Django Course', 'description': 'Веб-разработка на Django'},
@@ -50,9 +63,11 @@ class Command(BaseCommand):
         Payments.objects.all().delete()
         Lesson.objects.all().delete()
         Course.objects.all().delete()
+        Group.objects.all().delete()
         self.stdout.write(self.style.SUCCESS('Платежи, уроки и курсы удалены!'))
 
-        # === Создание или получение пользователей ===
+        # === Создание или получение пользователей, групп и модератора===
+        moderator_group = Group.objects.create(name='Moderators')
         created_users = []
         for user_data in users:
             email = user_data.pop('email')
@@ -67,10 +82,21 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING(f'Пользователь {email} уже существует'))
             created_users.append(user)
 
+
+        # Создаём модератора
+        if not CustomUser.objects.filter(email=moderator['email']).exists():
+            moderator_user = CustomUser.objects.create_user(
+                **moderator
+            )
+            moderator_user.groups.add(moderator_group)
+            moderator_user.save()
+
         #  Создание курсов
         created_courses = []
         for course_data in courses:
             course = Course.objects.create(**course_data)
+            course.owner = random.choice(created_users)
+            course.save()
             created_courses.append(course)
             self.stdout.write(self.style.SUCCESS(f'Курс создан: {course.name}'))
 
@@ -82,6 +108,8 @@ class Command(BaseCommand):
                 course=course,
                 **lesson_data
             )
+            lesson.owner = random.choice(created_users)
+            lesson.save()
             created_lessons.append(lesson)
             self.stdout.write(
                 self.style.SUCCESS(f'Урок создан: {lesson.name} (курс: {course.name})')
