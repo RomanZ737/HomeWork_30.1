@@ -12,9 +12,11 @@ from django.urls import path
 app_name = UsersConfig.name
 
 router = DefaultRouter()
-router.register(r'', CustomUserViewSet, basename='users')
 
 router.register(r'payments', PaymentsViewSet, basename='payments')
+router.register(r'', CustomUserViewSet, basename='users')
+
+
 urlpatterns = [
     path('register/', UserCreateAPIView.as_view(), name='register'),
     path('login/', TokenObtainPairView.as_view(permission_classes=(AllowAny,)), name='login'),

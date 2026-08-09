@@ -1,10 +1,10 @@
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404, HttpResponse
+from django.shortcuts import get_object_or_404
 from .models import Course, Lesson, CourseUpdateSubscription
 from .permissions import IsOwnerOrModerator, IsOwner, IsNotModerator
 from .serializers import CourseSerializer, LessonSerializer
-from rest_framework import viewsets, generics, permissions
+from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from .paginators import CoursePaginator, LessonPaginator
 
@@ -37,7 +37,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated()]
 
 
-
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
@@ -50,10 +49,22 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
+    """
+    Список уроков.
+
+    Доступен только аутентифицированным пользователям.
+    Модераторы видят все уроки, обычные пользователи — только свои.
+
+    Параметры пагинации:
+    - page: номер страницы
+    - page_size: размер страницы (макс. 25)
+    """
+
     serializer_class = LessonSerializer
     pagination_class = LessonPaginator
 
     def get_queryset(self):
+        """Возвращает уроки: все для модератора, только свои для обычного пользователя."""
         user = self.request.user
         if user.groups.filter(name='Moderators').exists():
             return Lesson.objects.all()  # модератор видит всё
@@ -95,7 +106,7 @@ class CourseSubscription(APIView):
         else:
             CourseUpdateSubscription.objects.create(
                                 course=course_item,
-                                user=user
+                                user=user,
                                 )
             message = 'подписка добавлена'
         return Response({"message": message})

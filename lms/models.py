@@ -6,6 +6,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='img/course_preview/', null=True, blank=True)
     description = models.TextField(verbose_name='Course description', null=True, blank=True, help_text='Описание курса')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    price = models.IntegerField(verbose_name='Course price')
 
     class Meta:
         ordering = ['name']
@@ -23,6 +24,7 @@ class Lesson(models.Model):
     preview = models.ImageField(upload_to='img/lesson_preview/', null=True, blank=True)
     video_url = models.CharField(max_length=100, verbose_name='Lesson video link', help_text='Ссылка на видео', null=True, blank=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    price = models.IntegerField(verbose_name='Course price')
 
     class Meta:
         ordering = ['name']

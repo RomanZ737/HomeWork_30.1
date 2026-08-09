@@ -45,17 +45,17 @@ class Command(BaseCommand):
         }
 
         courses = [
-            {'name': 'Python Basics', 'description': 'Основы программирования на Python'},
-            {'name': 'Django Course', 'description': 'Веб-разработка на Django'},
-            {'name': 'DRF Advanced', 'description': 'Продвинутый Django REST Framework'},
+            {'name': 'Python Basics', 'description': 'Основы программирования на Python', 'price': 100},
+            {'name': 'Django Course', 'description': 'Веб-разработка на Django', 'price': 200},
+            {'name': 'DRF Advanced', 'description': 'Продвинутый Django REST Framework', 'price': 300},
         ]
 
         lessons = [
-            {'name': 'Lesson 1: Introduction', 'description': 'Введение в тему'},
-            {'name': 'Lesson 2: Setup', 'description': 'Настройка окружения'},
-            {'name': 'Lesson 3: Basics', 'description': 'Базовые концепции'},
-            {'name': 'Lesson 4: Practice', 'description': 'Практическое задание'},
-            {'name': 'Lesson 5: Advanced', 'description': 'Продвинутые темы'},
+            {'name': 'Lesson 1: Introduction', 'description': 'Введение в тему', 'price': 50},
+            {'name': 'Lesson 2: Setup', 'description': 'Настройка окружения', 'price': 60},
+            {'name': 'Lesson 3: Basics', 'description': 'Базовые концепции', 'price': 70},
+            {'name': 'Lesson 4: Practice', 'description': 'Практическое задание', 'price': 80},
+            {'name': 'Lesson 5: Advanced', 'description': 'Продвинутые темы', 'price': 90},
         ]
 
         # === Очистка (кроме пользователей) ===

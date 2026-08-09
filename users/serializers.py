@@ -8,7 +8,10 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
-        fields = '__all__'
+        fields = ['id', 'payed_course', 'payed_lesson',
+                  'payment_amount', 'payment_method', 'payment_link',
+                  'stripe_session_id', 'payment_status', 'payment_at']
+        read_only_fields = ['id', 'payment_link', 'stripe_session_id', 'payment_status', 'payment_at']
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

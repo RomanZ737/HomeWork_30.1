@@ -27,13 +27,15 @@ class LessonTestCase(APITestCase):
         self.course = Course.objects.create(
             name='Тестовый курс',
             description='Описание курса',
-            owner=self.user
+            owner=self.user,
+            price=2000
         )
 
         self.other_course = Course.objects.create(
             name='Чужой курс',
             description='Описание чужого курса',
-            owner=self.other_user
+            owner=self.other_user,
+            price=2000
         )
 
         # урок
@@ -42,7 +44,8 @@ class LessonTestCase(APITestCase):
             name='Тестовый урок',
             description='Описание урока',
             video_url='https://youtube.com/',
-            owner=self.user
+            owner=self.user,
+            price=500
         )
 
         self.other_lesson = Lesson.objects.create(
@@ -50,7 +53,8 @@ class LessonTestCase(APITestCase):
             name='Чужой урок',
             description='Описание чужого урока',
             video_url='https://youtube.com/',
-            owner=self.other_user
+            owner=self.other_user,
+            price=500
         )
 
         # Аутентификация
@@ -66,6 +70,7 @@ class LessonCreateTest(LessonTestCase):
             'name': 'Новый урок',
             'description': 'Описание нового урока',
             'video_url': 'https://youtube.com/',
+            'price': 500,
         }
 
         response = self.client.post('/lesson/create/', data=data)
@@ -94,7 +99,8 @@ class LessonCreateTest(LessonTestCase):
         data = {
             'course': self.course.id,
             'name': 'Неавторизованный урок',
-            'video_url': 'https://youtube.com/'
+            'video_url': 'https://youtube.com/',
+            'price':2000
         }
 
         response = self.client.post('/lesson/create/', data=data)
