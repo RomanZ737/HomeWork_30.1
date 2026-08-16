@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'lms',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +94,7 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=160),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
@@ -134,6 +135,32 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
+}
+
+# Celery
+    # URL-адрес брокера сообщений
+CELERY_BROKER_URL = 'redis://localhost:6379'
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = "UTC"
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+# Максимальное время на выполнение задачи
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULE = {
+    'check_active_users': {
+        'task': 'lms.tasks.check_user_last_login',
+        'schedule': timedelta(days=1),
+    },
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -155,3 +182,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

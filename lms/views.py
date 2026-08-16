@@ -1,17 +1,44 @@
+from datetime import timezone, timedelta
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+
+from users.models import CustomUser
 from .models import Course, Lesson, CourseUpdateSubscription
 from .permissions import IsOwnerOrModerator, IsOwner, IsNotModerator
 from .serializers import CourseSerializer, LessonSerializer
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from .paginators import CoursePaginator, LessonPaginator
+from .tasks import update_subscription_mail
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     pagination_class = CoursePaginator
+
+    def update(self, request, *args, **kwargs):
+        course = self.get_object()
+        last_update = course.updated_at
+
+        if (timezone.now() - last_update) < timedelta(hours=4):
+            return super().update(request, *args, **kwargs)
+
+        response = super().update(request, *args, **kwargs)
+
+        updated_course = self.get_object()
+
+        subscription = CourseUpdateSubscription.objects.filter(course=updated_course)
+
+        email_list = []
+        if subscription.exists():
+            for sub in subscription:
+                email_list.append(sub.user.email)
+            update_subscription_mail.delay(email_list, updated_course.name)
+
+        return response
+
 
     def get_queryset(self):
         user = self.request.user
@@ -81,6 +108,27 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated, IsOwnerOrModerator]
+
+    def update(self, request, *args, **kwargs):
+        lesson = self.get_object()
+        last_update = lesson.updated_at
+
+        if (timezone.now() - last_update) < timedelta(hours=4):
+            return super().update(request, *args, **kwargs)
+
+        response = super().update(request, *args, **kwargs)
+
+        updated_lesson = self.get_object()
+
+        subscription = CourseUpdateSubscription.objects.filter(course__lesson=updated_lesson)
+
+        email_list = []
+        if subscription.exists():
+            for sub in subscription:
+                email_list.append(sub.user.email)
+            update_subscription_mail.delay(email_list, updated_lesson.course.name)
+
+        return response
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
