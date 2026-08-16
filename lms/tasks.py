@@ -1,9 +1,11 @@
 from celery import shared_task
 from django.core.mail import send_mail
+from redis.commands.search.querystring import union
+
 from users.models import CustomUser
 from config import settings
 from datetime import timezone, timedelta
-
+from django.db.models import Q
 
 @shared_task
 def update_subscription_mail(user_list, course_name):
@@ -18,17 +20,12 @@ def update_subscription_mail(user_list, course_name):
 
 @shared_task
 def check_user_last_login():
-    """
-    Проверяет пользователей по дате последнего входа.
-    Если пользователь не заходил более 30 дней - блокируем.
-    """
-    users = CustomUser.objects.all()
-    for user in users:
-        if user.last_login:
-            if  timezone.now() - user.last_login > timedelta(days=30):
-                user.is_active = False
-                user.save()
-        else:
-            if timezone.now() - user.date_joined > timedelta(days=30):
-                user.is_active = False
-                user.save()
+    now = timezone.now()
+    dead_line = now - timedelta(days=30)
+
+    total_users = CustomUser.objects.filter(
+        Q(last_login__lt=dead_line) | Q(last_login__isnull=True, date_joined__lt=dead_line)
+    ).filter(is_active=True)
+
+
+    total_users.update(is_active=False)
