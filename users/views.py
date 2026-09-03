@@ -30,8 +30,6 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
 
-
-
 class PaymentsViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentsSerializer
     queryset = Payments.objects.all()
@@ -134,8 +132,6 @@ class PaymentsViewSet(viewsets.ModelViewSet):
     #
     #     serializer = PaymentsSerializer(payment)
     #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
 
 
 class UserCreateAPIView(CreateAPIView):
