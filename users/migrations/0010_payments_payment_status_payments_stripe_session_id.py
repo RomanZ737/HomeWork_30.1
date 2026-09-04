@@ -13,7 +13,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='payments',
             name='payment_status',
-            field=models.CharField(choices=[('Pending', 'Ожидает оплаты'), ('Paid', 'Оплачен'), ('Cancelled', 'Отменён')], default='Pending', max_length=50),
+            field=models.CharField(choices=[('Pending', 'Ожидает оплаты'),
+                                            ('Paid', 'Оплачен'), ('Cancelled', 'Отменён')],
+                                   default='Pending', max_length=50),
         ),
         migrations.AddField(
             model_name='payments',

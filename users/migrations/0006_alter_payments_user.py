@@ -15,6 +15,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='payments',
             name='user',
-            field=models.ForeignKey(help_text='Пользователь, который оплатил курс', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User that payd for the course'),
+            field=models.ForeignKey(help_text='Пользователь, который оплатил курс',
+                                    on_delete=django.db.models.deletion.CASCADE,
+                                    to=settings.AUTH_USER_MODEL, verbose_name='User that payd for the course'),
         ),
     ]

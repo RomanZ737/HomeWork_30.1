@@ -143,7 +143,7 @@ CACHES = {
 }
 
 # Celery
-    # URL-адрес брокера сообщений
+# URL-адрес брокера сообщений
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')

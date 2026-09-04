@@ -78,7 +78,6 @@ class LessonCreateTest(LessonTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], 'Новый урок')
 
-
     def test_create_lesson_invalid_url(self):
         """Создание урока с запрещённой ссылкой"""
         data = {
@@ -100,7 +99,7 @@ class LessonCreateTest(LessonTestCase):
             'course': self.course.id,
             'name': 'Неавторизованный урок',
             'video_url': 'https://youtube.com/',
-            'price':2000
+            'price': 2000
         }
 
         response = self.client.post('/lesson/create/', data=data)

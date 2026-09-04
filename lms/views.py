@@ -1,10 +1,7 @@
 from datetime import timezone, timedelta
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-
-from users.models import CustomUser
 from .models import Course, Lesson, CourseUpdateSubscription
 from .permissions import IsOwnerOrModerator, IsOwner, IsNotModerator
 from .serializers import CourseSerializer, LessonSerializer
@@ -39,20 +36,16 @@ class CourseViewSet(viewsets.ModelViewSet):
 
         return response
 
-
     def get_queryset(self):
         user = self.request.user
         if user.groups.filter(name='Moderators').exists():
             return Course.objects.all()
         return Course.objects.filter(owner=user)
 
-
     def perform_create(self, serializer):
         new_course = serializer.save()
         new_course.owner = self.request.user
         new_course.save()
-
-
 
     def get_permissions(self):
         if self.action == "create":

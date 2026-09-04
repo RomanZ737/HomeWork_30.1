@@ -53,9 +53,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
 
+
 class PaymentType(models.TextChoices):
     CASH = 'Cash', 'Наличные'
     TRANSFER = 'Transfer', 'Перевод'
+
 
 class PaymentStatus(models.TextChoices):
     PENDING = 'Pending', 'Ожидает оплаты'

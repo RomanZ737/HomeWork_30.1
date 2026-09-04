@@ -8,7 +8,7 @@ from .views import (CourseViewSet,
 from rest_framework.routers import DefaultRouter
 from .apps import LmsConfig
 
-from django.urls import path, include
+from django.urls import path
 
 app_name = LmsConfig.name
 

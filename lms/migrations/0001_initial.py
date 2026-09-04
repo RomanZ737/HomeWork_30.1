@@ -18,7 +18,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(help_text='Название курса', max_length=100, verbose_name='Course name')),
                 ('preview', models.ImageField(blank=True, null=True, upload_to='img/course_preview/')),
-                ('description', models.TextField(blank=True, help_text='Описание курса', null=True, verbose_name='Course description')),
+                ('description', models.TextField(blank=True, help_text='Описание курса',
+                                                 null=True, verbose_name='Course description')),
             ],
             options={
                 'verbose_name': 'Курс',
@@ -31,9 +32,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(help_text='Название урока', max_length=100, verbose_name='Lesson name')),
-                ('description', models.TextField(blank=True, help_text='Описание урока', null=True, verbose_name='Lesson description')),
+                ('description', models.TextField(blank=True, help_text='Описание урока',
+                                                 null=True, verbose_name='Lesson description')),
                 ('preview', models.ImageField(blank=True, null=True, upload_to='img/lesson_preview/')),
-                ('video_url', models.CharField(help_text='Ссылка на видео', max_length=100, verbose_name='Lesson video link')),
+                ('video_url', models.CharField(help_text='Ссылка на видео',
+                                               max_length=100, verbose_name='Lesson video link')),
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lms.course')),
             ],
             options={

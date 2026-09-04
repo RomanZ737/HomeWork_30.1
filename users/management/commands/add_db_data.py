@@ -8,9 +8,6 @@ from datetime import timedelta
 from django.contrib.auth.models import Group
 
 
-
-
-
 class Command(BaseCommand):
     help = 'Add users, payments, lessons and courses for testing'
 
@@ -82,7 +79,6 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING(f'Пользователь {email} уже существует'))
             created_users.append(user)
 
-
         # Создаём модератора
         if not CustomUser.objects.filter(email=moderator['email']).exists():
             moderator_user = CustomUser.objects.create_user(
@@ -123,9 +119,7 @@ class Command(BaseCommand):
             course_index = i % len(created_courses)
             course = created_courses[course_index]
 
-
             payment_method = payment_methods[i % len(payment_methods)]
-
 
             payment_date = timezone.now() - timedelta(days=i * 3, hours=i * 5)
 
@@ -149,9 +143,7 @@ class Command(BaseCommand):
                     )
                 )
 
-
             lesson_index = (i * 2) % len(created_lessons)
-
 
             second_payment_method = payment_methods[(i + 1) % len(payment_methods)]
             second_payment_date = timezone.now() - timedelta(days=i * 2 + 1, hours=i * 3)

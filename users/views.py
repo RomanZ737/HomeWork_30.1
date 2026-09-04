@@ -1,4 +1,3 @@
-from warnings import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView
@@ -8,16 +7,11 @@ from .models import CustomUser, Payments
 from .permissions import IsOwner
 from .serializers import CustomUserSerializer, PaymentsSerializer
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 from lms.models import Course
 from .services import stripe_payment, get_stripe_session_status
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -69,9 +63,6 @@ class PaymentsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(payment)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
-
-
     @action(detail=False, methods=['get'], url_path='status/(?P<session_id>[^/.]+)')
     def payment_status(self, request, session_id=None):
         """
@@ -102,40 +93,7 @@ class PaymentsViewSet(viewsets.ModelViewSet):
         return Response(stripe_status)
 
 
-
-    # def perform_create(self, serializer):
-    #     # Сохраняем платёж
-    #     course = serializer.validated_data.get('payed_course')
-    #     payment = serializer.save(user=self.request.user,
-    #                               payment_amount=course.price)
-    #
-    #     # сохраняем ссылку
-    #     payment_link = stripe_payment(payment)
-    #     payment.payment_link = payment_link
-    #     payment.save(update_fields=['payment_link'])
-
-    # def post(self, request):
-    #     course_id = request.data.get('course_id')
-    #     course_item = get_object_or_404(Course, pk=course_id)
-    #
-    #     # Создаём платёж
-    #     payment = Payments.objects.create(
-    #         user=request.user,
-    #         payed_course=course_item,
-    #         payment_amount=course_item.price
-    #     )
-    #
-    #     # создаём ссылку
-    #     payment_link = stripe_payment(payment)
-    #     payment.payment_link = payment_link
-    #     payment.save(update_fields=['payment_link'])
-    #
-    #     serializer = PaymentsSerializer(payment)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
 class UserCreateAPIView(CreateAPIView):
     serializer_class = CustomUserSerializer
     queryset = CustomUser.objects.all()
     permission_classes = (AllowAny,)
-

@@ -1,10 +1,12 @@
 from django.db import models
 from config import settings
 
+
 class Course(models.Model):
     name = models.CharField(max_length=100, verbose_name='Course name', help_text='Название курса')
     preview = models.ImageField(upload_to='img/course_preview/', null=True, blank=True)
-    description = models.TextField(verbose_name='Course description', null=True, blank=True, help_text='Описание курса')
+    description = models.TextField(verbose_name='Course description',
+                                   null=True, blank=True, help_text='Описание курса')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     price = models.IntegerField(verbose_name='Course price')
     updated_at = models.DateTimeField(auto_now=True)
@@ -21,9 +23,11 @@ class Course(models.Model):
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name='Lesson name', help_text='Название урока')
-    description = models.TextField(verbose_name='Lesson description', null=True, blank=True, help_text='Описание урока')
+    description = models.TextField(verbose_name='Lesson description',
+                                   null=True, blank=True, help_text='Описание урока')
     preview = models.ImageField(upload_to='img/lesson_preview/', null=True, blank=True)
-    video_url = models.CharField(max_length=100, verbose_name='Lesson video link', help_text='Ссылка на видео', null=True, blank=True)
+    video_url = models.CharField(max_length=100, verbose_name='Lesson video link',
+                                 help_text='Ссылка на видео', null=True, blank=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     price = models.IntegerField(verbose_name='Course price')
     updated_at = models.DateTimeField(auto_now=True)

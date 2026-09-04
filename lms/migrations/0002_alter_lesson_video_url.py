@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='lesson',
             name='video_url',
-            field=models.CharField(blank=True, help_text='Ссылка на видео', max_length=100, null=True, verbose_name='Lesson video link'),
+            field=models.CharField(blank=True, help_text='Ссылка на видео', max_length=100,
+                                   null=True, verbose_name='Lesson video link'),
         ),
     ]

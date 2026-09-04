@@ -38,7 +38,7 @@ def stripe_payment(payment):
         raise serializers.ValidationError(
             {'payment': f'Ошибка карты: {e.user_message}'}
         )
-    except error.RateLimitError as e:
+    except error.RateLimitError:
         raise serializers.ValidationError(
             {'payment': 'Слишком много запросов. Попробуйте позже.'}
         )
@@ -46,11 +46,11 @@ def stripe_payment(payment):
         raise serializers.ValidationError(
             {'payment': f'Неверный запрос: {e.user_message}. Параметр: {e.param}'}
         )
-    except error.AuthenticationError as e:
+    except error.AuthenticationError:
         raise serializers.ValidationError(
             {'payment': 'Ошибка аутентификации Stripe. Проверьте ключ.'}
         )
-    except error.APIConnectionError as e:
+    except error.APIConnectionError:
         raise serializers.ValidationError(
             {'payment': 'Ошибка соединения с платёжным сервисом.'}
         )
@@ -62,7 +62,6 @@ def stripe_payment(payment):
         raise serializers.ValidationError(
             {'payment': f'Неизвестная ошибка: {str(e)}'}
         )
-
 
 
 def get_stripe_session_status(session_id):

@@ -4,7 +4,6 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 
-
 class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
@@ -21,7 +20,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'email', 'phone_number', 'city', 'payments', 'password']
-
 
     def to_representation(self, instance):
         request = self.context.get('request')

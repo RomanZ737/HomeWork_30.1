@@ -29,6 +29,7 @@ def validate_video_url(value):
 
     return value
 
+
 def validate_description(value):
     if not value:
         return value
