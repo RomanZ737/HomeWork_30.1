@@ -127,7 +127,7 @@ jobs:
 
       - name: Copy deployment files to server
         run: |
-          rsync -avz \
+          rsync -avz --no-group --no-owner \
             docker-compose.yml \
             nginx/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
