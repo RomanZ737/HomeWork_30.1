@@ -130,7 +130,6 @@ jobs:
           rsync -avz --no-group --no-owner \
             docker-compose.yml \
             nginx.conf \
-            html/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}/
 
       - name: Deploy via Docker
