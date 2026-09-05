@@ -82,3 +82,53 @@
     GET /api/courses/ – список курсов
 
     POST /api/courses/ – создание курса (только для преподавателей)
+
+**CI/CD и автоматический деплой**
+Проект настроен на непрерывную интеграцию и доставку с помощью **GitHub Actions**.
+
+Как работает pipeline
+
+Workflow запускается при каждом push в ветку main. Он состоит из четырёх этапов:
+* **lint** – проверка кода с помощью flake8.
+* **test** – запуск тестов Django с использованием PostgreSQL и Redis (поднимаются как сервисы в GitHub Actions).
+* **build** – сборка Docker-образа и публикация его в Docker Hub.
+* **deploy** – подключение к удалённому серверу по SSH, копирование файлов (docker-compose.yml, nginx.conf, html/) и запуск контейнеров через Docker Compose.
+
+
+**Необходимые секреты GitHub**
+
+Для работы pipeline в репозитории должны быть настроены следующие секреты (Settings → Secrets and variables → Actions):
+**Секрет	                Описание**
+SECRET_KEY	            *Секретный ключ Django (используется в тестах).*
+DOCKER_HUB_USERNAME	    *Имя пользователя Docker Hub.*
+DOCKER_HUB_ACCESS_TOKEN	*Токен доступа Docker Hub (можно создать в настройках Docker Hub).*
+SSH_KEY	                *Приватный SSH-ключ для доступа к серверу.*
+SSH_USER	            *Имя пользователя на сервере (например, roman).*
+SERVER_IP	            *IP-адрес удалённого сервера.*
+DEPLOY_DIR	            *Абсолютный путь к директории на сервере (например, /var/www/lms).*
+
+
+**Подготовка удалённого сервера**
+
+- Установите Docker и Docker Compose v2:
+
+bash
+
+    sudo apt update
+    sudo apt install docker.io docker-compose-plugin -y
+    sudo usermod -aG docker $USER   # добавьте пользователя SSH в группу docker
+
+- Создайте директорию для проекта (если ещё не создана):
+
+bash
+
+    sudo mkdir -p /var/www/lms
+    sudo chown $USER:$USER /var/www/lms
+
+- Создайте файл .env в /var/www/lms с реальными переменными окружения.
+    Пример можно взять из .env.example (только не забудьте указать POSTGRES_HOST=db, REDIS_HOST=redis).
+
+bash
+
+    cd /var/www/lms
+    nano .env
