@@ -110,7 +110,7 @@ DEPLOY_DIR	            *Абсолютный путь к директории н
 
 **Подготовка удалённого сервера**
 
-- Установите Docker и Docker Compose v2:
+- *Установите Docker и Docker Compose v2:*
 
 bash
 
@@ -118,15 +118,14 @@ bash
     sudo apt install docker.io docker-compose-plugin -y
     sudo usermod -aG docker $USER   # добавьте пользователя SSH в группу docker
 
-- Создайте директорию для проекта (если ещё не создана):
+- *Создайте директорию для проекта (если ещё не создана):*
 
 bash
 
     sudo mkdir -p /var/www/lms
     sudo chown $USER:$USER /var/www/lms
 
-- Создайте файл .env в /var/www/lms с реальными переменными окружения.
-    Пример можно взять из .env.example (только не забудьте указать POSTGRES_HOST=db, REDIS_HOST=redis).
+- *Создайте файл .env в /var/www/lms с реальными переменными окружения.*
 
 bash
 
