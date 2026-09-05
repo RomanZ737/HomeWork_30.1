@@ -1,4 +1,5 @@
-from datetime import timezone, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404

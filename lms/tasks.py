@@ -2,7 +2,8 @@ from celery import shared_task
 from django.core.mail import send_mail
 from users.models import CustomUser
 from config import settings
-from datetime import timezone, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from django.db.models import Q
 
 
